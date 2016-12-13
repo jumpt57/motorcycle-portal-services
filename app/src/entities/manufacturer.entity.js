@@ -1,41 +1,32 @@
 const Sequelize = require('sequelize');
-var sequelize = new Sequelize('postgres://motorcycleportal:motorcycleportal@localhost:5432/motorcycleportal');
+const CONFIG = require('../app.config');
 
-var Manufacturer = sequelize.define('Manufacturer',
-    {
-        id: {
-            type: Sequelize.INTEGER,
-            field: 'id',
-            primaryKey: true
+module.exports = function(server) {
+    return server.sequelize.define('manufacturer',
+        {
+            id: {
+                type: Sequelize.INTEGER,
+                primaryKey: true
+            },
+            name: {
+                type: Sequelize.STRING(100),
+                unique: true
+            },
+            years: {
+                type: Sequelize.ARRAY(Sequelize.STRING)
+            },
+            description: {
+                type: Sequelize.STRING
+            },
+            logoUrl: {
+                type: Sequelize.STRING,
+                field: 'logo_url'
+            },
+            imagesUrl: {
+                type: Sequelize.ARRAY(Sequelize.STRING(255)),
+                field: 'images_url'
+            },
         },
-        name: {
-            type: Sequelize.STRING(100),
-            field: 'name',
-            unique: true
-        },
-        years: {
-            type: Sequelize.ARRAY(Sequelize.RANGE(Sequelize.STRING)),
-            field: 'years'
-        },
-        description: {
-            type: Sequelize.STRING,
-            field: 'description'
-        },
-        logoUrl: {
-            type: Sequelize.STRING,
-            field: 'logo_url'
-        },
-        imagesUrl: {
-            type: Sequelize.ARRAY(Sequelize.RANGE(Sequelize.STRING(255))),
-            field: 'images_url'
-        },
-    },
-    {
-        freezeTableName: false,
-        timestamps: false,
-        tableName: 'bike_manufacturers',
-        schema: 'data_bikes'
-    });
-
-
-module.exports = Manufacturer;
+        CONFIG('manufacturers')
+    );
+};

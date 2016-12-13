@@ -10,6 +10,7 @@
   "license": "ISC",
   "dependencies": {
     "hapi": "^16.0.0",
+    "node-libcurl": "^1.0.0",
     "passport": "^0.3.2",
     "pg": "^6.1.0",
     "pg-hstore": "^2.3.2",

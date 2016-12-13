@@ -1,25 +1,19 @@
 const Sequelize = require('sequelize');
-var sequelize = new Sequelize('postgres://motorcycleportal:motorcycleportal@localhost:5432/motorcycleportal');
+const CONFIG = require('../app.config');
 
-var Category = sequelize.define('Category',
-    {
-        id: {
-            type: Sequelize.INTEGER,
-            field: 'id',
-            primaryKey: true
-        },
-        name: {
-            type: Sequelize.STRING(50),
-            field: 'name',
-            unique: true
+module.exports = function(server) {
+    return server.sequelize.define('category',
+        {
+            id: {
+                type: Sequelize.INTEGER,
+                primaryKey: true
+            },
+            name: {
+                type: Sequelize.STRING(50),
+                unique: true
+            }
         }
-    }
-    ,
-    {
-        freezeTableName: false,
-        timestamps: false,
-        tableName: 'bike_categories',
-        schema: 'data_bikes'
-    });
-
-    module.exports = Category;
+        ,
+        CONFIG('categories')
+    );
+};
