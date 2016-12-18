@@ -2,7 +2,7 @@ module.exports = function(server) {
 
     server.route({
         method: 'GET',
-        path: '/categories',
+        path: '/api/categories',
         handler: function(request, reply) {
             server.sequelize.model('category').findAll().then(function(data) {
                 reply(data);
@@ -12,7 +12,7 @@ module.exports = function(server) {
 
     server.route({
         method: 'GET',
-        path: '/categories/{id}/bikes',
+        path: '/api/categories/{id}/bikes',
         handler: function(request, reply) {
             server.sequelize.model('category').findAll({
                 attributes: ['id', 'name'],

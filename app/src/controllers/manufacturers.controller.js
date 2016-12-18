@@ -2,19 +2,44 @@ module.exports = function (server) {
 
     server.route({
         method: 'GET',
-        path: '/manufacturers',
+        path: '/api/manufacturers',
         handler: function (request, reply) {
             server.sequelize.model('manufacturer').findAll({
-                attributes: ['id', 'name', 'logoUrl']
+                attributes: ['id', 'name', 'logoUrl'],
+                through: {
+                    attributes: []
+                },
+                include: [
+                    {
+                        model: server.sequelize.model('bike'),
+                        as: 'bikes',
+                        attributes: ['id'],
+                        through: {
+                            attributes: []
+                        }
+                    }
+                ]
             }).then(function (data) {
-                reply(data);
+                let dataWithNb = [];
+
+                for (var i = 0; i < data.length; i++) {
+                    var element = data[i].dataValues;
+                    var nbBikes = element.bikes.length;
+                    delete element.bikes;
+                    element.nbBikes = nbBikes;
+                    dataWithNb.push(element);
+                }
+
+                if (i == data.length) {
+                    reply(dataWithNb);
+                }
             });
         }
     });
 
     server.route({
         method: 'GET',
-        path: '/manufacturers/{id}/bikes',
+        path: '/api/manufacturers/{id}/bikes',
         handler: function (request, reply) {
             server.sequelize.model('manufacturer').findAll({
                 attributes: {
@@ -47,7 +72,7 @@ module.exports = function (server) {
 
     server.route({
         method: 'GET',
-        path: '/manufacturers/{id}/bikes/{yearMin}/{yearMax}',
+        path: '/api/manufacturers/{id}/bikes/{yearMin}/{yearMax}',
         handler: function (request, reply) {
             server.sequelize.model('manufacturer').findAll({
                 attributes: {

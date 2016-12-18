@@ -2,7 +2,7 @@ module.exports = function(server) {
 
     server.route({
         method: 'GET',
-        path: '/bikes',
+        path: '/api/bikes',
         handler: function(request, reply) {
             server.sequelize.model('bike').findAll().then(function(data) {
                 reply(data);
@@ -12,7 +12,7 @@ module.exports = function(server) {
 
     server.route({
         method: 'GET',
-        path: '/bikes/min',
+        path: '/api/bikes/min',
         handler: function(request, reply) {
             server.sequelize.model('bike').findAll({
                 attributes: [
@@ -29,7 +29,7 @@ module.exports = function(server) {
 
     server.route({
         method: 'GET',
-        path: '/bikes/{id}',
+        path: '/api/bikes/{id}',
         handler: function(request, reply) {
             server.sequelize.model('bike').findAll({
                 where: {

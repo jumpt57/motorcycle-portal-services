@@ -4,7 +4,7 @@ module.exports = function (server) {
 
     server.route({
         method: 'GET',
-        path: '/lbc/{name}/{yearMin}/{yearMax}',
+        path: '/api/lbc/{name}/{yearMin}/{yearMax}',
         handler: function (request, reply) {
 
             var url = 'https://mobile.leboncoin.fr/templates/api/list.json?c=3&ps=1&it=1&';
