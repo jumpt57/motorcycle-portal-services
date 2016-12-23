@@ -4,12 +4,15 @@
   "description": "Backend pour Motorcycle Portal",
   "main": "app.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon src/app.run.js"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
     "hapi": "^16.0.0",
+    "html-entities": "^1.2.0",
+    "iconv-lite": "^0.4.15",
     "inert": "^4.0.3",
     "node-libcurl": "^1.0.0",
     "pg": "^6.1.0",

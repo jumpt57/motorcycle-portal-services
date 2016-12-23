@@ -46,7 +46,7 @@ module.exports = function(server) {
                         model: server.sequelize.model('front_axle'),
                     },
                     {
-                        model: server.sequelize.model('rear_axle'),
+                        model: server.sequelize.model('rear_axle')
                     },
                     {
                         model: server.sequelize.model('transmission')

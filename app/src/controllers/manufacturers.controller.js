@@ -107,4 +107,21 @@ module.exports = function (server) {
             });
         }
     });
+
+    server.route({
+        method: 'GET',
+        path: '/api/manufacturers/{id}',
+        handler: function (request, reply) {
+            server.sequelize.model('manufacturer').findOne({
+                attributes: {
+                    exclude: ['created_at', 'updated_at']
+                },
+                where: {
+                    id: request.params.id
+                }
+            }).then(function(data){
+                reply(data);
+            });
+        }
+    });
 }
