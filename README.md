@@ -1,2 +1,2 @@
 # motorcycle-portal-services
-Repository du backend PHP Laravel de l'application Motorcycle Portal
+Repository du backend NodeJS, HapiJS, SequelizeJS En TypeScript + Gulp de l'application Motorcycle Portal
