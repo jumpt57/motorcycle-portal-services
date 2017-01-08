@@ -21,6 +21,9 @@ export default class ManufacturersController {
             handler: (request: Hapi.Request, reply: Hapi.IReply) => {
                 this.sequelize.model('manufacturer').findAll({
                     attributes: ['id', 'name', 'logoUrl'],
+                    where: {
+                        show: true
+                    },
                     include: [
                         {
                             model: this.sequelize.model('bike'),

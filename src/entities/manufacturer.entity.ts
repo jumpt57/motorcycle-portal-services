@@ -29,6 +29,9 @@ export default class ManufacturerEntity {
                     type: Sequelize.ARRAY(Sequelize.STRING(255)),
                     field: 'images_url'
                 },
+                show: {
+                    type: Sequelize.BOOLEAN
+                }
             },
             config
         );
