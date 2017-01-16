@@ -6,9 +6,12 @@ export default class BikesController {
 
     constructor(server: Hapi.Server, sequelize: Sequelize.Sequelize) {
         this.sequelize = sequelize;
-        server.route(this.allBikes());
-        server.route(this.allBikesMin());
-        server.route(this.getBikeById());
+        server.route([
+            this.allBikes(),
+            this.getBikeByNameYear(),
+            this.allBikesMin(),
+            this.getBikeById()
+        ]);
     }
 
     allBikes(): Hapi.IRouteConfiguration {
@@ -76,6 +79,49 @@ export default class BikesController {
                     ]
                 }).then((result) => {
                     reply(result);
+                });
+            }
+        }
+    }
+
+    getBikeByNameYear(): Hapi.IRouteConfiguration {
+        return {
+            method: 'GET',
+            path: '/bikes/{name}/{year}',
+            handler: (request: Hapi.Request, reply: Hapi.IReply) => {
+                this.sequelize.model('bike').findAll({
+                    attributes: {
+                        exclude: ['created_at', 'updated_at', 'deleted_at']
+                    },
+                    where: {
+                        name: request.params['name'],
+                        year: request.params['year']
+                    },
+                    include: [
+                        {
+                            model: this.sequelize.model('engine'),
+                        },
+                        {
+                            model: this.sequelize.model('frame'),
+                        },
+                        {
+                            model: this.sequelize.model('front_axle'),
+                        },
+                        {
+                            model: this.sequelize.model('rear_axle')
+                        },
+                        {
+                            model: this.sequelize.model('transmission')
+                        },
+                        {
+                            model: this.sequelize.model('category')
+                        },
+                        {
+                            model: this.sequelize.model('manufacturer')
+                        }
+                    ]
+                }).then((result) => {
+                    reply(result[0]);
                 });
             }
         }

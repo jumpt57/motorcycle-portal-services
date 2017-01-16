@@ -12,8 +12,12 @@ export default class ManufacturersController {
             this.allManufacturers(),
             this.getManufacturersBikesById(),
             this.getManufacturersBikesByName(),
+
             this.getManufacturersBikesByIdYearMinAndMax(),
-            this.getManufacturersById()
+            this.getManufacturersBikesByNameYearMinAndMax(),
+            
+            this.getManufacturersById(),
+            this.getManufacturersByName()
         ]);
     }
 
@@ -85,7 +89,7 @@ export default class ManufacturersController {
                         }
                     ]
                 }).then(result => {
-                    reply(result);
+                    reply(result[0]);
                 });
             }
         }
@@ -94,7 +98,7 @@ export default class ManufacturersController {
     getManufacturersBikesByIdYearMinAndMax(): Hapi.IRouteConfiguration {
         return {
             method: 'GET',
-            path: '/manufacturers/{id}/bikes/{yearMin}/{yearMax}',
+            path: '/manufacturers/id/{id}/bikes/{yearMin}/{yearMax}',
             handler: (request: Hapi.Request, reply: Hapi.IReply) => {
                 this.sequelize.model('manufacturer').findAll({
                     attributes: {
@@ -125,7 +129,7 @@ export default class ManufacturersController {
                         }
                     ]
                 }).then(data => {
-                    reply(data);
+                    reply(data[0]);
                 });
             }
         }
@@ -134,7 +138,7 @@ export default class ManufacturersController {
     getManufacturersById(): Hapi.IRouteConfiguration {
         return {
             method: 'GET',
-            path: '/manufacturers/{id}',
+            path: '/manufacturers/id/{id}',
             handler: (request: Hapi.Request, reply: Hapi.IReply) => {
                 this.sequelize.model('manufacturer').findOne({
                     attributes: {
@@ -150,22 +154,41 @@ export default class ManufacturersController {
         }
     }
 
+    getManufacturersByName(): Hapi.IRouteConfiguration {
+        return {
+            method: 'GET',
+            path: '/manufacturers/name/{name}',
+            handler: (request: Hapi.Request, reply: Hapi.IReply) => {
+                //var name = Utils.formatManufacturerName(request.params['name']);
+
+                this.sequelize.model('manufacturer').findOne({
+                    attributes: {
+                        exclude: ['created_at', 'updated_at', 'deleted_at']
+                    },
+                    where: {
+                        name: request.params['name']
+                    }
+                }).then(data => {
+                    reply(data);
+                });
+            }
+        }
+    }
+
     getManufacturersBikesByName(): Hapi.IRouteConfiguration {
         return {
             method: 'GET',
             path: '/manufacturers/name/{name}/bikes',
             handler: (request: Hapi.Request, reply: Hapi.IReply) => {
-                var name = Utils.formatManufacturerName(request.params['name']);
+                //var name = Utils.formatManufacturerName(request.params['name']);
 
                 this.sequelize.model('manufacturer').findAll({
-                    attributes: {
-                        exclude: ['created_at', 'updated_at', 'deleted_at']
-                    },
+                    attributes: ['id'],
                     where: {
-                        name: name
+                        name: request.params['name']
                     },
                     order: [
-                        [{model: this.sequelize.model('bike'), as: 'bikes'}, 'year', 'DESC']
+                        [{ model: this.sequelize.model('bike'), as: 'bikes' }, 'year', 'DESC']
                     ],
                     include: [
                         {
@@ -185,6 +208,46 @@ export default class ManufacturersController {
                     ]
                 }).then(result => {
                     reply(result[0]);
+                });
+            }
+        }
+    }
+
+    getManufacturersBikesByNameYearMinAndMax(): Hapi.IRouteConfiguration {
+        return {
+            method: 'GET',
+            path: '/manufacturers/name/{name}/bikes/{yearMin}/{yearMax}',
+            handler: (request: Hapi.Request, reply: Hapi.IReply) => {
+                //var name = Utils.formatManufacturerName(request.params['name']);
+
+                this.sequelize.model('manufacturer').findAll({
+                    attributes: ['id'],
+                    where: {
+                        name: request.params['name']
+                    },
+                    include: [
+                        {
+                            model: this.sequelize.model('bike'),
+                            as: 'bikes',
+                            through: {
+                                attributes: []
+                            },
+                            attributes: ['id', 'name', 'imagesUrl', 'year'],
+                            include: [
+                                {
+                                    model: this.sequelize.model('category'),
+                                    attributes: ['name']
+                                }
+                            ],
+                            where: {
+                                year: {
+                                    $between: [request.params['yearMin'], request.params['yearMax']]
+                                }
+                            }
+                        }
+                    ]
+                }).then(data => {
+                    reply(data[0]);
                 });
             }
         }
