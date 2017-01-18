@@ -78,7 +78,7 @@ export default class BikesController {
                         }
                     ]
                 }).then((result) => {
-                    reply(result);
+                    reply(result[0]);
                 });
             }
         }

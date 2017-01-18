@@ -18,7 +18,7 @@ export default class CategoriesController {
             path: '/categories',
             handler: (request: Hapi.Request, reply: Hapi.IReply) => {
                 this.sequelize.model('category').findAll({
-                    attributes: ['id', 'name']
+                    attributes: ['name']
                 }).then((result) => {
                     reply(result);
                 });
