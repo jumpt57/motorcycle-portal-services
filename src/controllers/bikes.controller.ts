@@ -10,7 +10,8 @@ export default class BikesController {
             this.allBikes(),
             this.getBikeByNameYear(),
             this.allBikesMin(),
-            this.getBikeById()
+            this.getBikeById(),            
+            this.getBikesByName()
         ]);
     }
 
@@ -122,6 +123,26 @@ export default class BikesController {
                     ]
                 }).then((result) => {
                     reply(result[0]);
+                });
+            }
+        }
+    }
+
+    getBikesByName(): Hapi.IRouteConfiguration {
+        return {
+            method: 'GET',
+            path: '/bikes/name/{name}',
+            handler: (request: Hapi.Request, reply: Hapi.IReply) => {
+                this.sequelize.model('bike').findAll({
+                    attributes: ['year'],
+                    where: {
+                        name: request.params['name']
+                    },
+                    order: [
+                        ['year', 'ASC']
+                    ]                   
+                }).then((result) => {
+                    reply(result);
                 });
             }
         }
