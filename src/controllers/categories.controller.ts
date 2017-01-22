@@ -8,8 +8,23 @@ export default class CategoriesController {
         this.sequelize = sequelize;
         server.route([
             this.allCategs(),
-            this.getCategBikes()
+            this.getCategBikes(),
+            this.countCategs()
         ]);
+    }
+
+    countCategs(): Hapi.IRouteConfiguration {
+        return {
+            method: 'GET',
+            path: '/categories/count',
+            handler: (request: Hapi.Request, reply: Hapi.IReply) => {
+                this.sequelize.model('category').findAll({
+                    attributes: [[this.sequelize.fn('COUNT', this.sequelize.col('id')), 'nbCategs']]
+                }).then((result) => {
+                    reply(result[0]);
+                });
+            }
+        };
     }
 
     allCategs(): Hapi.IRouteConfiguration {

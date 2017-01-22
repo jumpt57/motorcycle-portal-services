@@ -17,8 +17,23 @@ export default class ManufacturersController {
             this.getManufacturersBikesByNameYearMinAndMax(),
             
             this.getManufacturersById(),
-            this.getManufacturersByName()
+            this.getManufacturersByName(),
+            this.countManufacturers()
         ]);
+    }
+
+    countManufacturers(): Hapi.IRouteConfiguration {
+        return {
+            method: 'GET',
+            path: '/manufacturers/count',
+            handler: (request: Hapi.Request, reply: Hapi.IReply) => {
+                this.sequelize.model('manufacturer').findAll({
+                    attributes: [[this.sequelize.fn('COUNT', this.sequelize.col('id')), 'nbManufacturers']]
+                }).then((result) => {
+                    reply(result[0]);
+                });
+            }
+        };
     }
 
     allManufacturers(): Hapi.IRouteConfiguration {

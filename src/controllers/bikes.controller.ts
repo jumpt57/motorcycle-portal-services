@@ -11,8 +11,23 @@ export default class BikesController {
             this.getBikeByNameYear(),
             this.allBikesMin(),
             this.getBikeById(),            
-            this.getBikesByName()
+            this.getBikesByName(),
+            this.countBikes()
         ]);
+    }
+
+    countBikes(): Hapi.IRouteConfiguration {
+        return {
+            method: 'GET',
+            path: '/bikes/count',
+            handler: (request: Hapi.Request, reply: Hapi.IReply) => {
+                this.sequelize.model('bike').findAll({
+                    attributes: [[this.sequelize.fn('COUNT', this.sequelize.col('id')), 'nbBikes']]
+                }).then((result) => {
+                    reply(result[0]);
+                });
+            }
+        };
     }
 
     allBikes(): Hapi.IRouteConfiguration {
